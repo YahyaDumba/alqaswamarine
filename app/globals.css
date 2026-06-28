@@ -24,3 +24,48 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes aqm-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% / 3));
+  }
+}
+
+.aqm-marquee {
+  overflow: hidden;
+  position: relative;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 128px,
+    black calc(100% - 128px),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 128px,
+    black calc(100% - 128px),
+    transparent
+  );
+}
+
+.aqm-marquee-track {
+  animation: aqm-marquee 30s linear infinite;
+  will-change: transform;
+  display: flex;
+}
+
+.aqm-marquee:hover .aqm-marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aqm-marquee-track {
+    animation: none;
+    transform: none;
+  }
+}

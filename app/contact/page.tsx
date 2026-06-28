@@ -2,9 +2,8 @@
 
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { FormEvent, useMemo, useState } from "react";
 
 type ContactFormState = {
@@ -146,23 +145,21 @@ export default function ContactPage() {
             </form>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 h-fit">
+          <div className="space-y-8 h-fit">
             <div className="space-y-8">
               <div className="space-y-2">
                 <h3 className="text-sm font-extrabold text-blue-600 uppercase">
                   Office Address
                 </h3>
-                <div className="text-sm text-gray-700 font-semibold">
-                  Al Qaswa Marine
-                </div>
                 <div className="text-sm text-gray-600 leading-relaxed">
-                  Opp. Madina Baug
+                  <div className="text-sm text-gray-700 font-semibold">
+                    AL-QASWA TRADING
+                  </div>
+                  SHERI NO. 7, CITY SURVEY NO. 2680,
                   <br />
-                  DSP Office road Navapara
+                  PLOT NO. 52, KUMBHARWADA CIRCLE
                   <br />
-                  Bhavnagar – 364001
-                  <br />
-                  Gujarat – India
+                  TO MADHIYA ROAD, BHAVNAGAR 364001
                 </div>
               </div>
 
@@ -199,81 +196,6 @@ export default function ContactPage() {
                     <Mail size={16} className="text-blue-600" />
                     <span>spares@alqaswamarine.com</span>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-8">
-              <div className="space-y-2">
-                <h3 className="text-sm font-extrabold text-blue-600 uppercase">
-                  Warehouse 1
-                </h3>
-                <div className="text-sm text-gray-700 font-semibold">
-                  Al Qaswa Marine
-                </div>
-                <div className="text-sm text-gray-600 leading-relaxed">
-                  Plot No 5656
-                  <br />
-                  Trapaj Alang Road
-                  <br />
-                  Bhavnagar – 364001
-                  <br />
-                  Gujarat – India
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h3 className="text-sm font-extrabold text-blue-600 uppercase">
-                  Warehouse 2
-                </h3>
-                <div className="text-sm text-gray-700 font-semibold">
-                  Al Qaswa Marine
-                </div>
-                <div className="text-sm text-gray-600 leading-relaxed">
-                  VIP Plot No 341
-                  <br />
-                  Bhavnagar – 364001
-                  <br />
-                  Gujarat – India
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-sm font-extrabold text-blue-600 uppercase">
-                  Follow Us
-                </h3>
-                <Link
-                  href="#"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-200 bg-white hover:bg-gray-50 transition"
-                  aria-label="LinkedIn"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-gray-700"
-                  >
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                    <rect width="4" height="12" x="2" y="9"></rect>
-                    <circle cx="4" cy="4" r="2"></circle>
-                  </svg>
-                </Link>
-
-                <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <MapPin size={14} className="text-blue-600" />
-                  <Link
-                    href="https://www.google.com/maps?q=Bhavnagar%2C%20Gujarat%2C%20India"
-                    target="_blank"
-                    className="hover:text-gray-700"
-                  >
-                    Open in Maps
-                  </Link>
                 </div>
               </div>
             </div>
