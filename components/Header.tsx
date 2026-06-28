@@ -25,11 +25,15 @@ export default function Header() {
       <div className="bg-[#0b3c6b] text-white py-2 px-4 sm:px-8 text-sm flex flex-col sm:flex-row justify-end items-center space-y-2 sm:space-y-0 sm:space-x-6">
         <div className="flex items-center space-x-2">
           <Phone size={16} />
-          <span>+91 9909762424</span>
+          <span>+91 9825183207</span>
         </div>
         <div className="flex items-center space-x-2">
           <Phone size={16} />
-          <span>+91 9825407373</span>
+          <span>+91 9624243854</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Phone size={16} />
+          <span>+91 9925016868</span>
         </div>
         <div className="flex items-center space-x-2">
           <Mail size={16} />

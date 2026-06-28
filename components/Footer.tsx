@@ -50,8 +50,9 @@ export default function Footer() {
         <div>
           <h3 className="font-bold text-lg mb-6 uppercase tracking-wider">Contact Us</h3>
           <div className="space-y-4 text-sm text-gray-300">
-            <p>+91 9825407373</p>
-            <p>+91 9909762424</p>
+            <p>+91 9825183207</p>
+            <p>+91 9624243854</p>
+            <p>+91 9925016868</p>
             <p>info@alqaswamarine.com</p>
             <p>spares@alqaswamarine.com</p>
           </div>

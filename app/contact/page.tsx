@@ -173,11 +173,15 @@ export default function ContactPage() {
                 <div className="space-y-2 text-sm text-gray-700">
                   <div className="flex items-center gap-2">
                     <Phone size={16} className="text-blue-600" />
-                    <span>+91 9825407373</span>
+                    <span>+91 9825183207</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Phone size={16} className="text-blue-600" />
-                    <span>+91 9909762424</span>
+                    <span>+91 9624243854</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone size={16} className="text-blue-600" />
+                    <span>+91 9925016868</span>
                   </div>
                 </div>
               </div>
@@ -295,4 +299,3 @@ export default function ContactPage() {
     </main>
   );
 }
-
