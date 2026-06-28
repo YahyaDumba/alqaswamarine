@@ -1,34 +1,31 @@
-import Image from "next/image";
+import Header from "@/components/Header";
+import Hero from "@/components/Hero";
+import About from "@/components/About";
+import Features from "@/components/Features";
+import Products from "@/components/Products";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex flex-col items-center justify-center p-6">
-      <div className="max-w-2xl w-full">
-        <div className="text-center space-y-6">
-          {/* Main Heading */}
-          <h1 className="text-5xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400">
-            Alqaswamarine
-          </h1>
-          
-          {/* Subtitle */}
-          <p className="text-xl text-slate-300 font-light">
-            This domain is under Alqaswamarine
-          </p>
-          
-          {/* Decorative Line */}
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-cyan-400 mx-auto"></div>
-          
-          {/* Status Badge */}
-          <div className="inline-block px-6 py-2 bg-slate-700/50 border border-cyan-400/30 rounded-full">
-            <span className="text-sm text-cyan-300">Currently Under Maintenance</span>
-          </div>
-        </div>
-      </div>
+    <main className="min-h-screen flex flex-col bg-white">
+      <Header />
+      <Hero />
+      <About />
+      <Features />
+      <Products />
+      <Footer />
       
-      {/* Footer */}
-      <div className="absolute bottom-8 text-center text-slate-500 text-sm">
-        <p>© 2026 Alqaswamarine. All rights reserved.</p>
+      {/* Floating Chat/Contact Button */}
+      <div className="fixed bottom-6 right-6 flex items-center space-x-3 z-50">
+        <div className="bg-white px-4 py-2 rounded-full shadow-lg text-sm font-medium border border-gray-100 hidden sm:block">
+          Contact us
+        </div>
+        <button className="bg-blue-600 text-white p-4 rounded-full shadow-xl hover:bg-blue-700 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </button>
       </div>
-    </div>
+    </main>
   );
 }
