@@ -25,6 +25,52 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.goog-te-banner-frame.skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
+.aqm-translate {
+  display: flex;
+  align-items: center;
+}
+
+.aqm-translate .goog-te-gadget {
+  font-family: inherit;
+  font-size: 0;
+  line-height: 1;
+}
+
+.aqm-translate .goog-logo-link,
+.aqm-translate .goog-te-gadget span {
+  display: none !important;
+}
+
+.aqm-translate select.goog-te-combo {
+  margin: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.2;
+  background: white;
+  color: #111827;
+}
+
+.aqm-translate-pill .aqm-translate select.goog-te-combo {
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: white;
+}
+
 @keyframes aqm-marquee {
   0% {
     transform: translateX(0);

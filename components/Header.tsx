@@ -1,9 +1,10 @@
 "use client";
 
-import { Phone, Mail, Search, Menu, X } from "lucide-react";
+import { Phone, Mail, Search, Menu, X, Globe } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import GoogleTranslate from "@/components/GoogleTranslate";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -35,6 +36,10 @@ export default function Header() {
           <Phone size={16} />
           <span>+91 9925016868</span>
         </div>
+        <div className="aqm-translate-pill flex items-center gap-2 rounded-md bg-white/10 px-3 py-1 ring-1 ring-white/20">
+          <Globe size={16} className="text-white/90" />
+          <GoogleTranslate />
+        </div>
         <div className="flex items-center space-x-2">
           <Mail size={16} />
           <span>info@alqaswamarine.com</span>
@@ -47,12 +52,12 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
-              src="/Images/Logo.jpeg"
+              src="/Images/logonobg.png"
               alt="Al Qaswa Marine"
-              width={540}
-              height={372}
+              width={1280}
+              height={960}
               priority
-              className="h-12 w-auto"
+              className="h-20 sm:h-24 md:h-28 w-auto"
             />
           </Link>
 

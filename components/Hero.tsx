@@ -132,20 +132,22 @@ export default function Hero() {
             </p>
           </div>
 
-          <div className="relative rounded-2xl bg-white shadow-lg border border-gray-200 overflow-hidden">
-            <div className="relative overflow-hidden aqm-marquee">
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white via-white to-white/20 z-20" />
-              <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white via-white to-white/20 z-20" />
+          <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen px-4 sm:px-8">
+            <div className="relative rounded-2xl bg-white shadow-lg border border-gray-200 overflow-hidden">
+              <div className="relative overflow-hidden aqm-marquee">
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-36 sm:w-44 bg-gradient-to-r from-white via-white to-white/20 z-20" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-36 sm:w-44 bg-gradient-to-l from-white via-white to-white/20 z-20" />
 
-              <div className="aqm-marquee-track flex items-center gap-16 w-max py-10 px-8 sm:px-12">
-                {brands.concat(brands).concat(brands).map((b, idx) => (
-                  <div
-                    key={`${b.id}-${idx}`}
-                    className="h-24 min-w-[200px] rounded-xl bg-gray-50 border-2 border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-300 flex items-center justify-center px-6 shrink-0"
-                  >
-                    <BrandMark id={b.id} name={b.name} />
-                  </div>
-                ))}
+                <div className="aqm-marquee-track flex items-center gap-16 sm:gap-20 w-max py-14 sm:py-16 px-8 sm:px-12">
+                  {brands.concat(brands).concat(brands).map((b, idx) => (
+                    <div
+                      key={`${b.id}-${idx}`}
+                      className="h-32 sm:h-36 min-w-[240px] sm:min-w-[300px] rounded-2xl bg-gray-50 border-2 border-gray-100 hover:border-blue-200 hover:shadow-md transition-all duration-300 flex items-center justify-center px-8 shrink-0"
+                    >
+                      <BrandMark id={b.id} name={b.name} />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

@@ -5,139 +5,111 @@ import Header from "@/components/Header";
 import { ChevronLeft, ChevronRight, Grid2X2, List, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Product = {
-  id: string;
+  _id: string;
+  name: string;
+  slug: string;
   brand: string;
-  title: string;
-  image: string;
+  category: string;
+  images: string[];
   createdAt: string;
 };
 
-const BRANDS = [
-  "ABB-BBC TURBOCHARGER",
-  "AKASAKA",
-  "ALCO",
-  "BERGEN ROLLS-ROYCE",
-  "CATERPILLAR",
-  "DAIHATSU",
-  "DEUTZ",
-  "Electro-Motive Diesel GM (EMD)",
-  "GENERAL ELECTRIC GE",
-  "GOVERNORS",
-  "HIMSEN",
-  "MAK",
-  "MAN B&W",
-  "MAN B&W TURBOCHARGER",
-  "MTU",
-  "NIGATA",
-  "NOHAB POLAR",
-  "OTHER ENGINE SPARES",
-  "PIELSTICK",
-  "RUSTON",
-  "SKL",
-  "STORK WERKSPOOR (SWD)",
-  "SULZER-ZGODA",
-  "WARTSILA",
-  "WICHMANN",
-  "YANMAR",
-];
-
-const PRODUCT_IMAGES = [
-  "/Images/site/product-1.jpg",
-  "/Images/site/product-2.jpg",
-  "/Images/site/product-3.jpg",
-  "/Images/site/product-4.jpg",
-];
-
-function buildMockProducts(count: number): Product[] {
-  const titles = [
-    "MAN B&W 32/40 FUEL INJECTION PIPE",
-    "WICHMANN 12V28B ENGINE COMPLETE",
-    "WICHMANN AXAG CYLINDER LINER",
-    "WICHMANN AXAG - AXA CYLINDER HEAD",
-    "MTU 4000 CYLINDER HEAD (12V4000)",
-    "MAK 32 M32, 6M32, 8M32, 9M32 ENGINE",
-    "GENERAL ELECTRIC GE 7FDL16D3 ENGINE",
-    "MAN B&W 9L40/54 ENGINE WITH 6400KW 550RPM",
-    "MAN B&W 8L40/54 ENGINE WITH 5280KW 510RPM",
-    "PIELSTICK 280 FUEL INJECTORS",
-    "HIMSEN H25/33 FUEL INJECTION PUMP",
-    "ABB TPL 61D01 TURBOCHARGER",
-    "PIELSTICK 280 CONNECTING ROD",
-    "PIELSTICK 280 CYLINDER HEAD",
-  ];
-
-  const now = Date.now();
-  const products: Product[] = [];
-  for (let i = 0; i < count; i += 1) {
-    const brand = BRANDS[i % BRANDS.length] ?? "MAN B&W";
-    const title = titles[i % titles.length] ?? `Marine spare part ${i + 1}`;
-    const image = PRODUCT_IMAGES[i % PRODUCT_IMAGES.length] ?? PRODUCT_IMAGES[0]!;
-    const createdAt = new Date(now - i * 1000 * 60 * 60 * 12).toISOString();
-    products.push({
-      id: `p_${i + 1}`,
-      brand,
-      title,
-      image,
-      createdAt,
-    });
-  }
-  return products;
-}
+const DEFAULT_IMAGE = "/Images/site/product-1.jpg";
 
 function classNames(...parts: Array<string | false | null | undefined>) {
   return parts.filter(Boolean).join(" ");
 }
 
 export default function ProductsPage() {
-  const allProducts = useMemo(() => buildMockProducts(347), []);
-
+  const [mounted, setMounted] = useState(false);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<"latest" | "name_asc" | "name_desc">("latest");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [page, setPage] = useState(1);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    let items = allProducts;
-
-    if (selectedBrands.length > 0) {
-      const set = new Set(selectedBrands);
-      items = items.filter((p) => set.has(p.brand));
-    }
-
-    if (q) {
-      items = items.filter((p) => {
-        return (
-          p.title.toLowerCase().includes(q) ||
-          p.brand.toLowerCase().includes(q) ||
-          p.id.toLowerCase().includes(q)
-        );
-      });
-    }
-
-    const sorted = [...items];
-    if (sort === "latest") {
-      sorted.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
-    } else if (sort === "name_asc") {
-      sorted.sort((a, b) => a.title.localeCompare(b.title));
-    } else {
-      sorted.sort((a, b) => b.title.localeCompare(a.title));
-    }
-
-    return sorted;
-  }, [allProducts, query, selectedBrands, sort]);
-
   const pageSize = 20;
-  const total = filtered.length;
+
+  // Handle client-side mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Fetch brands on mount
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const fetchBrands = async () => {
+      try {
+        const response = await fetch('/api/brands');
+        const data = await response.json();
+        if (data.success) {
+          setBrands(data.data);
+        }
+      } catch (err) {
+        console.error('Error fetching brands:', err);
+      }
+    };
+    fetchBrands();
+  }, [mounted]);
+
+  // Fetch products whenever filters change
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const params = new URLSearchParams({
+          page: page.toString(),
+          limit: pageSize.toString(),
+          sort: sort,
+        });
+
+        if (selectedBrands.length > 0) {
+          params.append('brand', selectedBrands.join(','));
+        }
+
+        if (query.trim()) {
+          params.append('search', query.trim());
+        }
+
+        const response = await fetch(`/api/products?${params}`);
+        const data = await response.json();
+
+        if (data.success) {
+          setProducts(data.data);
+          setTotal(data.pagination.total);
+        } else {
+          setError('Failed to load products');
+        }
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [mounted, page, sort, selectedBrands, query]);
+
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(Math.max(1, page), totalPages);
   const startIndex = (safePage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, total);
-  const pageItems = filtered.slice(startIndex, endIndex);
+  const pageItems = products;
 
   const toggleBrand = (brand: string) => {
     setPage(1);
@@ -152,6 +124,11 @@ export default function ProductsPage() {
     setQuery("");
     setSort("latest");
     setPage(1);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setPage(1);
+    setQuery(value);
   };
 
   const pageButtons = useMemo(() => {
@@ -172,6 +149,11 @@ export default function ProductsPage() {
     buttons.push(totalPages);
     return buttons;
   }, [safePage, totalPages]);
+
+  // Prevent hydration mismatch by waiting for client mount
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <main className="min-h-screen flex flex-col bg-[#f0f4f8]">
@@ -197,10 +179,7 @@ export default function ProductsPage() {
             <div className="relative mb-4">
               <input
                 value={query}
-                onChange={(e) => {
-                  setPage(1);
-                  setQuery(e.target.value);
-                }}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 placeholder="Search products..."
                 className="w-full border border-gray-200 rounded-md py-2 pl-9 pr-3 text-sm focus:outline-none focus:border-blue-500"
               />
@@ -208,7 +187,7 @@ export default function ProductsPage() {
             </div>
 
             <div className="max-h-[520px] overflow-auto pr-1 space-y-2">
-              {BRANDS.map((brand) => {
+              {brands.map((brand) => {
                 const checked = selectedBrands.includes(brand);
                 return (
                   <label key={brand} className="flex items-start gap-2 text-sm text-gray-700">
@@ -273,7 +252,25 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            {total === 0 ? (
+            {loading ? (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-10 text-center">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-gray-200 rounded w-1/3 mx-auto mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+                </div>
+              </div>
+            ) : error ? (
+              <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-10 text-center">
+                <h3 className="text-lg font-semibold text-red-600 mb-2">Error</h3>
+                <p className="text-gray-600 text-sm mb-6">{error}</p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="inline-flex items-center justify-center bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition text-sm font-semibold"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : total === 0 ? (
               <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-10 text-center">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No products found</h3>
                 <p className="text-gray-600 text-sm mb-6">
@@ -288,46 +285,58 @@ export default function ProductsPage() {
               </div>
             ) : view === "grid" ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {pageItems.map((p) => (
-                  <div
-                    key={p.id}
-                    className="bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition overflow-hidden"
-                  >
-                    <div className="relative aspect-square bg-gray-100">
-                      <Image src={p.image} alt={p.title} fill className="object-cover" sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
-                        <span className="text-blue-900 font-bold text-lg uppercase tracking-widest rotate-[-15deg]">
-                          AL QASWA MARINE
-                        </span>
+                {pageItems.map((p) => {
+                  const productImage = p.images && p.images.length > 0 ? p.images[0] : DEFAULT_IMAGE;
+                  return (
+                    <div
+                      key={p._id}
+                      className="bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition overflow-hidden"
+                    >
+                      <div className="relative aspect-square bg-gray-100">
+                        <Image 
+                          src={productImage} 
+                          alt={p.name} 
+                          fill 
+                          className="object-cover" 
+                          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" 
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-15 pointer-events-none">
+                          <span className="text-blue-900 font-bold text-lg uppercase tracking-widest rotate-[-15deg]">
+                            AL QASWA MARINE
+                          </span>
+                        </div>
+                      </div>
+                      <div className="p-4 space-y-2">
+                        <div className="text-[10px] text-gray-500 uppercase tracking-wide">{p.brand}</div>
+                        <Link href={`/products/${p.slug}`} className="block text-sm font-semibold text-blue-600 hover:text-blue-700 line-clamp-2">
+                          {p.name}
+                        </Link>
                       </div>
                     </div>
-                    <div className="p-4 space-y-2">
-                      <div className="text-[10px] text-gray-500 uppercase tracking-wide">{p.brand}</div>
-                      <Link href="#" className="block text-sm font-semibold text-blue-600 hover:text-blue-700 line-clamp-2">
-                        {p.title}
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="space-y-3">
-                {pageItems.map((p) => (
-                  <div
-                    key={p.id}
-                    className="bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition p-4 flex gap-4 items-center"
-                  >
-                    <div className="relative w-24 h-24 rounded-md overflow-hidden bg-gray-100 shrink-0">
-                      <Image src={p.image} alt={p.title} fill className="object-cover" sizes="96px" />
+                {pageItems.map((p) => {
+                  const productImage = p.images && p.images.length > 0 ? p.images[0] : DEFAULT_IMAGE;
+                  return (
+                    <div
+                      key={p._id}
+                      className="bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition p-4 flex gap-4 items-center"
+                    >
+                      <div className="relative w-24 h-24 rounded-md overflow-hidden bg-gray-100 shrink-0">
+                        <Image src={productImage} alt={p.name} fill className="object-cover" sizes="96px" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[11px] text-gray-500 uppercase tracking-wide mb-1">{p.brand}</div>
+                        <Link href={`/products/${p.slug}`} className="text-sm font-semibold text-blue-600 hover:text-blue-700">
+                          {p.name}
+                        </Link>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[11px] text-gray-500 uppercase tracking-wide mb-1">{p.brand}</div>
-                      <Link href="#" className="text-sm font-semibold text-blue-600 hover:text-blue-700">
-                        {p.title}
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
